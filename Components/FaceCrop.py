@@ -88,6 +88,11 @@ def crop_to_vertical(input_video_path, output_video_path):
     smoothed_x = 0  # Smoothed horizontal position in scaled coordinates
     prev_gray = None
     
+    # Calculate update interval for motion tracking (max 1 shift per second)
+    if use_motion_tracking:
+        update_interval = int(fps)  # Update once per second
+        print(f"Motion tracking: updating every {update_interval} frames (~1 shift/second)")
+    
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -97,8 +102,8 @@ def crop_to_vertical(input_video_path, output_video_path):
             # Resize frame first
             resized_frame = cv2.resize(frame, (scaled_width, scaled_height), interpolation=cv2.INTER_LANCZOS4)
             
-            # Update motion tracking every 10 frames
-            if frame_count % 10 == 0:
+            # Update motion tracking once per second
+            if frame_count % update_interval == 0:
                 curr_gray = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2GRAY)
                 
                 if prev_gray is not None:

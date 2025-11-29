@@ -2,10 +2,9 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.editor import VideoFileClip
 import subprocess
 
-def extractAudio(video_path):
+def extractAudio(video_path, audio_path="audio.wav"):
     try:
         video_clip = VideoFileClip(video_path)
-        audio_path = "audio.wav"
         video_clip.audio.write_audiofile(audio_path)
         video_clip.close()
         print(f"Extracted audio to: {audio_path}")
